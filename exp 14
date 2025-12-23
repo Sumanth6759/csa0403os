@@ -1,0 +1,25 @@
+#include <stdio.h>
+
+int main() {
+    int n, i;
+    int start[10], length[10];
+
+    printf("Enter number of files: ");
+    scanf("%d", &n);
+
+    for (i = 0; i < n; i++) {
+        printf("Enter starting block and length of file %d: ", i + 1);
+        scanf("%d %d", &start[i], &length[i]);
+    }
+
+    printf("\nFile\tStart Block\tLength\tAllocated Blocks\n");
+
+    for (i = 0; i < n; i++) {
+        printf("%d\t%d\t\t%d\t", i + 1, start[i], length[i]);
+        for (int j = 0; j < length[i]; j++)
+            printf("%d ", start[i] + j);
+        printf("\n");
+    }
+
+    return 0;
+}
