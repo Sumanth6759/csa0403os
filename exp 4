@@ -1,0 +1,51 @@
+#include <stdio.h>
+
+int main() {
+    int n;
+    int at[10], bt[10], ct[10], tat[10], wt[10], p[10];
+    int i, j, temp;
+    int completed = 0, time = 0, min_bt, idx;
+
+    printf("Enter number of processes: ");
+    scanf("%d", &n);
+
+    for (i = 0; i < n; i++) {
+        printf("Enter Arrival Time and Burst Time for P%d: ", i + 1);
+        scanf("%d %d", &at[i], &bt[i]);
+        p[i] = i + 1;
+    }
+
+    while (completed < n) {
+        min_bt = 9999;
+        idx = -1;
+
+        for (i = 0; i < n; i++) {
+            if (at[i] <= time && bt[i] > 0 && bt[i] < min_bt) {
+                min_bt = bt[i];
+                idx = i;
+            }
+        }
+
+        if (idx != -1) {
+            time += bt[idx];
+            ct[idx] = time;
+            bt[idx] = 0;
+            completed++;
+        } else {
+            time++;
+        }
+    }
+
+    for (i = 0; i < n; i++) {
+        tat[i] = ct[i] - at[i];
+        wt[i] = tat[i] - bt[i]; // bt is now 0, so use original burst
+    }
+
+    printf("\nProcess\tAT\tBT\tCT\tTAT\tWT\n");
+    for (i = 0; i < n; i++) {
+        printf("P%d\t%d\t%d\t%d\t%d\t%d\n",
+               p[i], at[i], (ct[i] - at[i] - wt[i]), ct[i], tat[i], wt[i]);
+    }
+
+    return 0;
+}
