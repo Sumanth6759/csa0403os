@@ -1,0 +1,80 @@
+#include <stdio.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <string.h>
+
+int main() {
+    int choice, fd;
+    char filename[50], buffer[100];
+    int n;
+
+    while (1) {
+        printf("\n--- UNIX File Management ---\n");
+        printf("1. Create File\n");
+        printf("2. Write File\n");
+        printf("3. Read File\n");
+        printf("4. Delete File\n");
+        printf("5. Exit\n");
+        printf("Enter choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+
+        case 1: // Create
+            printf("Enter file name: ");
+            scanf("%s", filename);
+            fd = open(filename, O_CREAT | O_WRONLY, 0644);
+            if (fd == -1)
+                printf("File creation failed\n");
+            else {
+                printf("File created successfully\n");
+                close(fd);
+            }
+            break;
+
+        case 2: // Write
+            printf("Enter file name: ");
+            scanf("%s", filename);
+            fd = open(filename, O_WRONLY | O_APPEND);
+            if (fd == -1) {
+                printf("File not found\n");
+                break;
+            }
+            printf("Enter text to write: ");
+            scanf(" %[^\n]", buffer);
+            write(fd, buffer, strlen(buffer));
+            close(fd);
+            printf("Data written successfully\n");
+            break;
+
+        case 3: // Read
+            printf("Enter file name: ");
+            scanf("%s", filename);
+            fd = open(filename, O_RDONLY);
+            if (fd == -1) {
+                printf("File not found\n");
+                break;
+            }
+            printf("File content:\n");
+            while ((n = read(fd, buffer, sizeof(buffer))) > 0)
+                write(1, buffer, n); // write to stdout
+            close(fd);
+            break;
+
+        case 4: // Delete
+            printf("Enter file name: ");
+            scanf("%s", filename);
+            if (unlink(filename) == 0)
+                printf("File deleted successfully\n");
+            else
+                printf("File deletion failed\n");
+            break;
+
+        case 5:
+            return 0;
+
+        default:
+            printf("Invalid choice\n");
+        }
+    }
+}
