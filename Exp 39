@@ -1,0 +1,20 @@
+#include <stdio.h>
+
+int main() {
+    FILE *fp;
+    char data[50];
+
+    fp = fopen("file.txt", "w");
+    fprintf(fp, "Operating System Lab");
+    fclose(fp);
+
+    fp = fopen("file.txt", "r");
+    fscanf(fp, "%[^\n]", data);
+    printf("File content: %s\n", data);
+    fclose(fp);
+
+    remove("file.txt");
+    printf("File deleted successfully\n");
+
+    return 0;
+}
