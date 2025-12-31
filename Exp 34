@@ -1,0 +1,43 @@
+#include <stdio.h>
+#include <sys/stat.h>
+#include <unistd.h>
+
+void print_permissions(mode_t mode) {
+    printf("Owner  : %c%c%c\n",
+           (mode & S_IRUSR) ? 'r' : '-',
+           (mode & S_IWUSR) ? 'w' : '-',
+           (mode & S_IXUSR) ? 'x' : '-');
+
+    printf("Group  : %c%c%c\n",
+           (mode & S_IRGRP) ? 'r' : '-',
+           (mode & S_IWGRP) ? 'w' : '-',
+           (mode & S_IXGRP) ? 'x' : '-');
+
+    printf("Others : %c%c%c\n",
+           (mode & S_IROTH) ? 'r' : '-',
+           (mode & S_IWOTH) ? 'w' : '-',
+           (mode & S_IXOTH) ? 'x' : '-');
+}
+
+int main() {
+    struct stat fileStat;
+
+    if (stat("sample.txt", &fileStat) < 0) {
+        perror("stat");
+        return 1;
+    }
+
+    printf("File Access Permissions for sample.txt\n\n");
+
+    print_permissions(fileStat.st_mode);
+
+    printf("\nUser Information\n");
+    printf("Owner UID : %d\n", fileStat.st_uid);
+    printf("Group GID : %d\n", fileStat.st_gid);
+
+    printf("\nCurrent Process User\n");
+    printf("UID : %d\n", getuid());
+    printf("GID : %d\n", getgid());
+
+    return 0;
+}
